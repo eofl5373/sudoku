@@ -17,7 +17,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM
 			SDK_BOARD
 		LIMIT 4
-	</select>
+	</select>	
+	
 
 </mapper>
 
