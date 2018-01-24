@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+	<!--  PC 템플릿 정의 -->
+	<definition name="tiles.layout.project.template" 	template="/WEB-INF/views/template/layout/project/template.jsp">
+		<put-attribute name="meta" 				value="/WEB-INF/views/template/layout/project/meta.jsp" />
+		<put-attribute name="header" 			value="/WEB-INF/views/template/layout/project/header.jsp" />
+		<put-attribute name="footer" 			value="/WEB-INF/views/template/layout/project/footer.jsp" />
+		<put-attribute name="scripts" 			value="/WEB-INF/views/template/layout/project/scripts.jsp" />
+	</definition>
+
+	<!--  PC ajax 템플릿 정의 -->
+	<definition name="tiles.ajax.template" 	template="/WEB-INF/views/template/layout/project/contents.jsp">
+	</definition>
+	
+	<definition name="tiles.ajax.project.*.*.AJAX.*" 	extends="tiles.ajax.template">
+		<put-attribute name="contents" 			value="/WEB-INF/views/project/{1}/{2}/AJAX/{3}.jsp" />
+	</definition>
+
+	<definition name="tiles.ajax.project.*.AJAX.*" 	extends="tiles.ajax.template">
+		<put-attribute name="contents" 			value="/WEB-INF/views/project/{1}/AJAX/{2}.jsp" />
+	</definition>
+
+	<!--  PC 템플릿 정의 -->
+	<definition name="tiles.project.*.*.*.*.*" extends="tiles.layout.project.template">
+		<put-attribute name="contents-js" 		value="/WEB-INF/views/project/{1}/{2}/{3}/{4}/{5}-js.jsp" />
+		<put-attribute name="contents" 			value="/WEB-INF/views/project/{1}/{2}/{3}/{4}/{5}.jsp" />
+		<put-attribute name="contents-popup" 	value="/WEB-INF/views/project/{1}/{2}/{3}/{4}/{5}-popup.jsp" />
+	</definition>
+	<definition name="tiles.project.*.*.*.*" extends="tiles.layout.project.template">
+		<put-attribute name="contents-js" 		value="/WEB-INF/views/project/{1}/{2}/{3}/{4}-js.jsp" />
+		<put-attribute name="contents" 			value="/WEB-INF/views/project/{1}/{2}/{3}/{4}.jsp" />
+		<put-attribute name="contents-popup" 	value="/WEB-INF/views/project/{1}/{2}/{3}/{4}-popup.jsp" />
+	</definition>
+	<definition name="tiles.project.*.*.*" extends="tiles.layout.project.template">
+		<put-attribute name="contents-js" 		value="/WEB-INF/views/project/{1}/{2}/{3}-js.jsp" />
+		<put-attribute name="contents" 			value="/WEB-INF/views/project/{1}/{2}/{3}.jsp" />
+		<put-attribute name="contents-popup" 	value="/WEB-INF/views/project/{1}/{2}/{3}-popup.jsp" />
+	</definition>
+	<definition name="tiles.project.*.*" extends="tiles.layout.project.template">
+		<put-attribute name="contents-js" 		value="/WEB-INF/views/project/{1}/{2}-js.jsp" />
+		<put-attribute name="contents" 			value="/WEB-INF/views/project/{1}/{2}.jsp" />
+		<put-attribute name="contents-popup" 	value="/WEB-INF/views/project/{1}/{2}-popup.jsp" />
+	</definition>
+	<definition name="tiles.project.*" extends="tiles.layout.project.template">
+		<put-attribute name="contents-js" 		value="/WEB-INF/views/project/{1}-js.jsp" />
+		<put-attribute name="contents" 			value="/WEB-INF/views/project/{1}.jsp" />
+		<put-attribute name="contents-popup" 	value="/WEB-INF/views/project/{1}-popup.jsp" />
+	</definition>
+
+</tiles-definitions>

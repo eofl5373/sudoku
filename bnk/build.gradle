@@ -1,0 +1,197 @@
+// Tomcat과 Cargo를 위한 Repository 설정
+buildscript {
+	repositories {
+		mavenCentral()
+	    jcenter()
+	}
+	
+	dependencies {
+		classpath 'org.gradle.api.plugins:gradle-tomcat-plugin:1.0'
+		classpath 'org.gradle.api.plugins:gradle-cargo-plugin:1.4'
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'eclipse-wtp'
+// Local  개발 환경에 사용을 위한 Tomcat Plugin
+apply plugin: 'tomcat'
+// 외부 배포에 필요한 Cargo Plugin
+apply plugin: 'cargo'
+
+ext {
+  javaVersion='1.8'
+  servletVersion='3.0'
+  appVersion='1.0'
+  
+  warFileName='bnk-plus_'+appVersion+'.war'
+}
+
+sourceCompatibility = javaVersion
+version = appVersion
+
+project.ext {
+	springVersion = '4.2.4.RELEASE'
+	springSecurityVersion = '3.2.5.RELEASE'
+	mybatisVersion = '3.3.0'
+	hibernateValidatorVersion = '5.1.3.Final'
+	// jpa2Version = '1.0.1.Final'
+	slf4jVersion = '1.7.6'
+	servletApiVersion = '3.1.0'
+	jstlVersion = '1.2'
+	dbConnMysqlVersion = '5.1.34'
+	apachePoiVersion = '3.10.1'
+	itextPdfVersion = '5.5.9'
+	tilesVersion = '3.0.5'
+}
+
+repositories {
+    // Source 저장소 사용
+    flatDir { dirs "libs" }
+	// Maven 기본 저장소 사용
+    mavenCentral()
+}
+
+dependencies {
+
+	/* Tomcat Plugin Setting */
+	def tomcatVersion = '8.0.37'
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+           "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
+    tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
+        exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
+    }
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    providedCompile 'javax.servlet:jsp-api:2.0'
+    providedCompile "org.apache.tomcat:tomcat-servlet-api:${tomcatVersion}"
+    
+    /* Cargo Plugin Setting */
+	def cargoVersion = '1.4.5'
+    cargo "org.codehaus.cargo:cargo-core-uberjar:$cargoVersion",
+            "org.codehaus.cargo:cargo-ant:$cargoVersion"
+
+	// Log
+	compile "org.slf4j:slf4j-api:$slf4jVersion"
+	compile "org.slf4j:jcl-over-slf4j:$slf4jVersion"
+	compile 'ch.qos.logback:logback-classic:1.0.13'
+	compile 'ch.qos.logback:logback-core:1.0.13'
+	// http://mvnrepository.com/artifact/com.googlecode.log4jdbc/log4jdbc
+    compile group: 'com.googlecode.log4jdbc', name: 'log4jdbc', version: '1.2'
+	compile group: 'org.lazyluke', name: 'log4jdbc-remix', version: '0.2.7'
+
+	// Spring Framework
+	compile "org.springframework:spring-context:$springVersion"
+	compile "org.springframework:spring-webmvc:$springVersion"
+	compile "org.springframework:spring-context-support:$springVersion"
+	
+	compile "jstl:jstl:$jstlVersion"
+	compile('javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:1.2.1') {
+        transitive = false
+    }
+    compile('org.glassfish.web:javax.servlet.jsp.jstl:1.2.1') {
+        transitive = false
+    }
+    compile "org.springframework:spring-context-support:$springVersion"
+    
+    // Spring Security
+    compile "org.springframework.security:spring-security-web:$springSecurityVersion"
+    compile "org.springframework.security:spring-security-config:$springSecurityVersion"
+    compile "org.springframework.security:spring-security-taglibs:$springSecurityVersion"
+	
+	// Templete Engin
+	compile "org.apache.tiles:tiles-jsp:$tilesVersion"
+	compile "org.apache.tiles:tiles-extras:$tilesVersion"
+	compile "org.apache.tiles:tiles-el:$tilesVersion"
+	compile 'org.apache.velocity:velocity:1.7'		// $foo, $foo.boo
+	
+	// DBMS Framework
+	compile "org.mybatis:mybatis:$mybatisVersion"
+	compile "org.mybatis:mybatis-spring:1.2.2"
+	
+	// Spring ORM
+	compile "org.springframework:spring-orm:$springVersion"
+	
+	// DB
+	compile "mysql:mysql-connector-java:$dbConnMysqlVersion"								// MySQL Connector
+	// compile "commons-dbcp:commons-dbcp:1.4"
+	compile 'com.jolbox:bonecp:0.8.0.RELEASE'
+	compile "org.springframework:spring-jdbc:$springVersion"
+	compile name: "ojdbc7"
+	compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
+	
+	// Validator
+	compile "org.hibernate:hibernate-validator:$hibernateValidatorVersion"
+	
+	// POI
+	compile "org.apache.poi:poi:$apachePoiVersion"
+	compile "org.apache.poi:poi-excelant:$apachePoiVersion"
+	compile "org.apache.poi:poi-ooxml:$apachePoiVersion"
+	compile "org.apache.poi:poi-ooxml-schemas:$apachePoiVersion"
+	compile "org.apache.poi:poi-scratchpad:$apachePoiVersion"
+	
+	// ETC
+	compile 'joda-time:joda-time:2.7'
+	compile 'json-taglib:json-taglib:0.4.1'
+	compile 'com.google.code.gson:gson:2.3.1'                                                      // Name: GSON, URL: https://github.com/google/gson
+	compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
+	compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
+	compile 'commons-io:commons-io:2.4'                                              // Name: Apache Commons, URL: http://jakarta.apache.org/commons/io/
+	compile 'commons-fileupload:commons-fileupload:1.3.1'							 // Name: Apache Commons, URL: http://commons.apache.org/proper/commons-fileupload/
+	compile 'com.sun.xml.security:xml-security-impl:1.0'
+	compile 'javax.mail:mail:1.4.7'                                                                        // Name: JavaMail API
+	
+	
+	//HTTP Client Library
+	compile 'org.apache.httpcomponents:httpclient:4.1.2'							//HTTP Client Library
+	compile 'com.squareup.okhttp3:okhttp:3.8.1'										//okHttp
+	
+    // cache
+    compile 'net.sf.ehcache:ehcache:2.9.0'
+    
+
+}
+
+// Source Encoding
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+/*
+eclipse {
+	wtp {
+		component {
+			contextPath = project.name // 원하는 contextPath 지정. 단, 빈 컨텍스트패스는 '/' 로 지정
+			deployName = 'thinktree'
+			resource deployPath: '/', sourcePath: '/WebContent'
+			resource deployPath: '/WEB-INF/classes', sourcePath: '/src'
+        }
+        facet {
+            facet name: 'jst.web', version: "$servletVersion"
+			facet name: 'jst.java', version: "$javaVersion"
+        }
+    }
+}
+sourceSets {
+    main {
+        java {
+            srcDirs "src/main/java"
+        }
+        resources {
+            srcDir "src/main/resources"
+        }
+    }
+}
+*/
+
+war {
+	archiveName = "$warFileName"
+}
+
+// tomcarRun을 실행시키기 위해서 war에 대한 dependency를 주입합니다.
+tomcatRun {
+    contextPath = ""
+    URIEncoding = 'UTF-8'
+    dependsOn war
+}
+
+tomcatRunWar {
+    dependsOn war
+}
